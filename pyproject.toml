@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oulad-lakehouse"
+version = "0.1.0"
+description = "Batch medallion lakehouse over the Open University Learning Analytics Dataset: Spark bronze/silver, DuckDB star schema, data contracts and incremental loads"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Hai Nguyen" }]
+dependencies = [
+  "pyspark==3.5.*",
+  "duckdb>=1.0",
+  "pyarrow>=14",
+  "pandas>=2.1",
+  "numpy>=1.26",
+  "fsspec>=2024.2",
+]
+
+[project.optional-dependencies]
+report = ["matplotlib>=3.8"]
+s3 = ["s3fs>=2024.2"]
+dev = ["pytest>=8", "pytest-cov>=5", "ruff>=0.5", "mypy>=1.10", "pre-commit>=3.7", "matplotlib>=3.8"]
+
+[project.scripts]
+oulad = "oulad_lakehouse.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --cov=oulad_lakehouse --cov-report=term-missing:skip-covered"
+markers = ["spark: runs a local Spark session (needs Java 17+)"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.coverage.run]
+source = ["oulad_lakehouse"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+check_untyped_defs = true

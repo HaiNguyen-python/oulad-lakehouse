@@ -1,0 +1,18 @@
+# Optional: MinIO as an S3-compatible lake for bronze and silver. See README, "Storage".
+# Not needed for the default local run, and not started in this repo's CI (only validated).
+services:
+  minio:
+    image: minio/minio:RELEASE.2024-10-13T13-34-11Z
+    # A top-level folder in MinIO's data dir is a bucket: this creates the "oulad" bucket.
+    entrypoint: sh -c "mkdir -p /data/oulad && minio server /data --console-address :9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+
+volumes:
+  minio-data:
